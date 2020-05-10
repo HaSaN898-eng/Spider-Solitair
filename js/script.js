@@ -1,12 +1,14 @@
 // button event start
 
-let startGameBtn = 0
+
+let startGameBtn = 0;
+
 
 $("#btn").on("click", () => {
 
-    startGameBtn++
+    startGameBtn++;
 
-    if (startGameBtn === 1) {
+    if (startGameBtn == 1) {
         startGame();
     }
 })
@@ -17,6 +19,9 @@ function startGame() {
 
     $("#btn").fadeOut(500); //hide th button
     $(".p").fadeIn(1000); //show the cards
+    $(".downbar").fadeIn(1000); //show the cards
+    $(".switch-wrap").fadeIn(1000);
+    $(".cheattitle").fadeIn(1000);
     $(".endmsg").fadeOut();
 
 
@@ -24,6 +29,11 @@ function startGame() {
     let a = 0; //change the card container
     var y = -20;
     var count = 0;
+    var scoreC = 500;
+    var movesC = 0;
+    let t1 = 0;
+    let t2 = 0;
+    let t3 = 0;
     //values of the game cards
     var arr = [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13]
         // loop to give each container enough cards
@@ -211,8 +221,7 @@ function startGame() {
                             flag = false;
                             break;
                         }
-                        console.log(flag)
-                        console.log(xsiblingsid);
+
 
                     }
                 }
@@ -226,8 +235,7 @@ function startGame() {
                     $(p3).css("left", y + 20 + "px");
                     y += 20;
                     count++;
-                    console.log("y =" + y);
-                    console.log("count =" + count);
+
                     if (count == 8) {
                         endgame();
                     }
@@ -238,6 +246,13 @@ function startGame() {
             }
 
         }
+
+        movesC++;
+        scoreC--;
+
+        document.querySelector("#movesC").innerHTML = movesC;
+        document.querySelector("#scoreC").innerHTML = scoreC;
+
     }
 
     $(".p2").on("click", (e) => {
@@ -284,6 +299,14 @@ function startGame() {
     }
 
     function endgame() {
+        $(".downbar").fadeOut(1000);
+        $(".switch-wrap").fadeOut(1000);
+        $(".cheattitle").fadeOut(1000);
+        $(".cheatcard").fadeOut(1000);
+        clearInterval(timinginterval);
+        $(".endtime").html(`${t3} : ${t2} : ${t1}`);
+        $(".endmoves").html(movesC);
+        $(".endscore").html(scoreC);
         $(".endmsg").fadeIn();
     }
     $("#btn2").on("click", function() {
@@ -294,9 +317,53 @@ function startGame() {
       <div class="p2" id="p-13"></div>
       <div class="p2" id="p-14"></div>
       <div class="p2" id="p-15"></div>`);
-        $("#btn").trigger("click");
+
+        startGame();
     })
 
+
+
+    // timing start
+
+    var timinginterval = setInterval(function() {
+
+        if (t1 < 59) {
+            t1++;
+
+        } else if (t1 == 59) {
+            t1 = 0;
+            if (t2 < 59) {
+                t2++;
+            } else if (t2 == 59) {
+                t2 = 0;
+                t3++;
+            }
+        }
+        document.querySelector("#t1").innerHTML = t1;
+        document.querySelector("#t2").innerHTML = t2;
+        document.querySelector("#t3").innerHTML = t3;
+    }, 1000);
+
+
+    //  timing end
+
+    // cheat mode start
+    $(".switch-wrap").click(function(e) {
+        var cheatflag = document.querySelector("#cheatinput").checked;
+        if (cheatflag) {
+            $(".cheatcard").fadeIn(1000);
+        } else {
+            $(".cheatcard").fadeOut(1000);
+        }
+
+    });
+
+    $(".card").mouseover(function() {
+        var cheatflag = document.querySelector("#cheatinput").checked;
+        if (cheatflag) {
+            document.querySelector(".cheatcard").className = `cheatcard card card-${this.id}`;
+        }
+    });
 
 
 }
